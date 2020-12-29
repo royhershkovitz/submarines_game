@@ -32,9 +32,19 @@ class UIInterface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
+    def message(self, text):
+        """
+        will present a message to the user
+        """
+        pass
+    @abstractmethod
     def update_enemy_board(self, missile_result):
         """
         will update the attack result on board
+        :param missile_result: named tuple containing who, x, y, result
+        who - string name
+        result - 0 miss
+        result - 1 hit
         """
         pass
 

@@ -26,9 +26,8 @@ class GameIntreface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
-    def wait_for_turn(self)->bytes:
+    def wait_for_turn(self):
         """
-        will listen to incoming connections 
-        the server values given in the constructor
+        will get what happened in the competitor turn
         """
         pass

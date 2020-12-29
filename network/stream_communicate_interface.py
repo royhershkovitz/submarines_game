@@ -18,6 +18,12 @@ class StreamCommunicateIntreface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
+    def close(self):
+        """
+        will close-open connections
+        """
+        pass
+    @abstractmethod
     def listen(self):
         """
         will listen to incoming connections 
