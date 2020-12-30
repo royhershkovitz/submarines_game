@@ -10,3 +10,10 @@ class NetworkError(Exception):
     """
     def __init__(self, message, errors):
         super().__init__(message)
+
+class EXIT(Exception):
+    """
+    error to create a exit procedure
+    """
+    def __init__(self, message, errors):
+        super().__init__(message)

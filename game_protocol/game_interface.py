@@ -17,6 +17,30 @@ class GameIntreface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
+    def start_host(self):
+        """
+        will start listen to requests
+        """
+        pass
+    @abstractmethod
+    def connect(self):
+        """
+        will connect to the host described in the network client
+        """
+        pass
+    @abstractmethod
+    def quit(self):
+        """
+        will send a quit message
+        """
+        pass
+    @abstractmethod
+    def response_to_attacker(self, response):
+        """
+        will send a response if needed
+        """
+        pass
+    @abstractmethod
     def attack(self, x:int, y:int)->bytes:
         """
         will attack the opponent on the given coords

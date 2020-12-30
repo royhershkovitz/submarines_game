@@ -45,7 +45,9 @@ class UIInterface(metaclass=ABCMeta):
         who - string name
         result - 0 miss
         result - 1 hit
+        result - 2 sink
         """
         pass
 #you won you lost?
 #menu/ choose game mode/choose port ip
+#host_not_online

@@ -5,8 +5,9 @@ from game_protocol.octet_implementation import OctetImplementation
 from game_protocol.octet_implementation import OctetImplementation
 GAME_PORT = 25565
 
+
 def main():
-    game_network_protocol = OctetImplementation(TCPImplementation('localhost', GAME_PORT))
+    game_network_protocol = OctetImplementation(TCPImplementation("localhost", GAME_PORT))
     game = Game1v1(CLI_UI(), game_network_protocol)
     game.start()
 

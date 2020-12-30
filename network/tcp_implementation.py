@@ -15,7 +15,7 @@ class TCPImplementation(StreamCommunicateIntreface):
     def __init__(self, host, port):
         self.host = host
         self.port = port
-        self.logger = logging.getLogger('TCPImplementation')
+        self.logger = logging.getLogger("TCPImplementation")
 
     def connect(self):
         """
@@ -34,7 +34,7 @@ class TCPImplementation(StreamCommunicateIntreface):
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serversocket.bind((self.host, self.port))
         self.serversocket.listen(1)        
-        (self.clientsocket, address) = serversocket.accept()
+        (self.clientsocket, address) = self.serversocket.accept()
         self.logger.info(f"A client connected at {address} have connected to the server")
 
     def close(self):

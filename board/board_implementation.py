@@ -24,14 +24,23 @@ class Board(BoardIntreface):
         """
         will update the attack result on board
         will handle bounds check
+        will convert x,y coords from <1,n> to <0, n-1>
         :param missile_result: named tuple containing who, x, y, result
         who - string name
         result - 0 miss
         result - 1 hit
+        result - 2 sink
         """
-        pass
-
-    def set_hit_coords_location(self, x, y)->int:
+        #TODO add this code as @
+        if missile_result.x > self.size_x or missile_result.x < START_BOARD:
+            return INVALID
+        if missile_result.y > self.size_y or missile_result.y < START_BOARD:
+            return INVALID
+        self.board[missile_result.x-1][missile_result.y-1] |= HIT_LOC
+        if missile_result.result != 0:
+            self.board[missile_result.x-1][missile_result.y-1] |= SHIP_POS
+    #TODO sink
+    def get_hit_result(self, x, y)->int:
         """
         will get the board contents at x, y
         will convert x,y coords from <1,n> to <0, n-1>
@@ -53,22 +62,6 @@ class Board(BoardIntreface):
         ret_value = self.board[x][y]
         self.board[x][y] |= HIT_LOC
         return ret_value
-    
-    def set_ship_coords_location(self, x, y):
-        """
-        will get the board contents at x, y
-        will convert x,y coords from <1,n> to <0, n-1>
-        will not set outside of bounds
-        :param x:
-        :param y:
-        """
-        if point.x > self.size_x or point.x < START_BOARD:
-            return INVALID
-        if point.y > self.size_y or point.y < START_BOARD:
-            return INVALID
-        x-=1
-        y-=1
-        self.board[x][y] |= (HIT_LOC|SHIP_POS)
 
     def place_ships(self, ships)->bool:
         """

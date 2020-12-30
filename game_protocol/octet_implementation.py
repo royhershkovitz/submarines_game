@@ -4,8 +4,14 @@ Author: roy
 Creation date: 29.12.2020
 """
 from abc import ABCMeta, abstractmethod
-from game_protocol.network_exception import NetworkError
+import collections
 import logging
+from game_protocol.network_exception import NetworkError, EXIT
+#TOP_VALUE < 15 because \xFF is quit signal
+TOP_VALUE = 14
+START = b'\xFF'
+QUIT = b'\xFF'
+
 
 class OctetImplementation(metaclass=ABCMeta):
     """
@@ -13,18 +19,27 @@ class OctetImplementation(metaclass=ABCMeta):
     """
     def __init__(self, network_client):
         self.network_client = network_client
-        self.logger = logging.getLogger('OctetImplementation')
+        self.logger = logging.getLogger("OctetImplementation")
+        self.make_result = collections.namedtuple("Result", "x y result")
+
+    def start_host(self):
+        self.logger.debug(f"start host")
+        self.network_client.listen()
+    
+    def connect(self):
+        self.logger.debug(f"start client")
+        self.network_client.connect()
 
     def start(self):
         """
         will send a message to start the game and wait for the response
         """
         self.logger.info(f"send start byte")
-        self.network_client.send(b'\xff')
+        self.network_client.send(START)
         recv_bytes = self.network_client.recv()
         if recv_bytes and len(recv_bytes) > 0:
             start_byte = recv_bytes[0]
-            return start_byte == b'\xff'
+            return start_byte == START
         return False
 
     def send_ships(self, ships:list):
@@ -44,6 +59,14 @@ class OctetImplementation(metaclass=ABCMeta):
         self.network_client.recv()
         return [2, 3, 3, 4, 5]
 
+    def quit(self):
+        """
+        will send a quit message
+        """
+        self.logger.debug(f"quiting the game")
+        self.network_client.send(QUIT)
+        self.network_client.close()
+
     def attack(self, x:int, y:int)->bytes:
         """
         will attack the opponent on the given coords
@@ -51,13 +74,21 @@ class OctetImplementation(metaclass=ABCMeta):
         :param y: number < 16
         :return: the other client response
         """
-        if x > 15 or x < 0 or y > 15 or y < 0:
+        if x > TOP_VALUE or x < 0 or y > TOP_VALUE or y < 0:
             raise NetworkError("The protocol does not support x,y coords outside [0,15]")
         attack_value = x
         y = y<<4
         attack_value += y
         attack_value = bytes([attack_value])
         self.network_client.send(attack_value)
+        result = self.network_client.recv()
+        if result and len(result) > 0:
+            result = result[0]
+            if result==QUIT:
+                raise EXIT("Opponent left")
+        else:
+            raise NetworkError("Opponent broke protocol in attack response")
+        return self.make_result(x, y, result)
 
     def wait_for_turn(self):
         """
@@ -69,4 +100,11 @@ class OctetImplementation(metaclass=ABCMeta):
             x = attack_value%16
             y = attack_value>>4
             return (x,y)
-        return None
+        raise NetworkError("Opponent broke protocol in his turn")
+
+    def response_to_attacker(self, response):
+        """
+        will send a response
+        """
+        response = bytes([response])
+        self.network_client.send(response)
