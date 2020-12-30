@@ -53,17 +53,20 @@ class Game1v1():
         self.game_protocol.start()
         while True:
             if turn == MY_TURN:
+                update_turn("you")
                 point = self.ui.get_user_target()
                 response = self.game_protocol.attack(x, y)
                 self.enemy_board.update_location(response)
                 self.ui.update_enemy_board(response)
                 turn = OPPONENT_TURN
             elif turn == OPPONENT_TURN:
+                update_turn("opponent")
                 point = self.ui.wait_for_turn()
                 value = self.my_board.get_hit_result(point)
                 self.game_protocol.response_to_attacker(value)
+                self.ui.update_attacks(value)
                 turn = MY_TURN
             else:
-                self.logger.error("turn are broken")
+                self.logger.error("turns are broken")
                 break
         self.logger.error("exit game")

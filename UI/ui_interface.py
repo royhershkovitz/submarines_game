@@ -32,7 +32,7 @@ class UIInterface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
-    def message(self, text):
+    def message(self, text:str):
         """
         will present a message to the user
         """
@@ -46,6 +46,14 @@ class UIInterface(metaclass=ABCMeta):
         result - 0 miss
         result - 1 hit
         result - 2 sink
+        """
+        pass
+    @abstractmethod
+    def update_attacks(self, missile):
+        """
+        will update the attack result on out board
+        :param missile: named tuple containing who, x, y, result
+        who - string name
         """
         pass
 #you won you lost?
