@@ -62,8 +62,11 @@ class OctetImplementation(metaclass=ABCMeta):
         """
         will send a message to start the game and wait for the response
         """
-        self.network_client.recv()
-        return [2, 3, 3, 4, 5]
+        response = self.network_client.recv()
+        output = []
+        for byte in range(1, len(response)):
+            output.append(response[byte])
+        return output
 
     def quit(self):
         """

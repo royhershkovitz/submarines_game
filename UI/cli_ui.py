@@ -5,9 +5,9 @@ Creation date: 29.12.2020
 """
 import collections
 from UI.ui_interface import UIInterface
-MISS = 0
-HIT = 1
-SINK = 2
+MISS = 1
+HIT = 2
+SINK = 3
 
 
 class CLI_UI(UIInterface):
@@ -24,7 +24,7 @@ class CLI_UI(UIInterface):
         :ships: the available ships length, and suggested position
         :return: the ships location
         """
-        return [self.make_ship(0, 0, True, 2)]
+        #return [self.make_ship(0, 0, True, 2)]
         print(f"The ships sizes {ships}")
         ships_location = []
         for ship_size in ships:

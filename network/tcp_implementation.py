@@ -15,6 +15,8 @@ class TCPImplementation(StreamCommunicateIntreface):
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.serversocket = None
+        self.clientsocket = None
         self.logger = logging.getLogger("TCPImplementation")
 
     def connect(self):
@@ -46,10 +48,13 @@ class TCPImplementation(StreamCommunicateIntreface):
             self.serversocket.close()
         if self.clientsocket:
             self.clientsocket.close()
+        self.serversocket = None
+        self.clientsocket = None
         self.logger.debug(f"Network closed")
 
     def send(self, data:bytes):
-        self.clientsocket.sendall(data)
+        if self.clientsocket:
+            self.clientsocket.sendall(data)
 
     def recv(self)->bytes:
         self.logger.debug(f"blocking recv")

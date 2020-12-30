@@ -43,4 +43,10 @@ class BoardIntreface(metaclass=ABCMeta):
             :param size:
         :return:    true if could fit the ship in this place
         """
+        pass    
+    @abstractmethod
+    def is_lost(self):
+        """
+        true if there are still active picese on the board
+        """
         pass
