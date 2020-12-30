@@ -34,5 +34,5 @@ class StreamCommunicateIntreface(metaclass=ABCMeta):
     def send(self, data:bytes):
         pass
     @abstractmethod
-    def receive(self)->bytes:
+    def recv(self)->bytes:
         pass

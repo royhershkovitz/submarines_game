@@ -47,5 +47,5 @@ class UIInterface(metaclass=ABCMeta):
         result - 1 hit
         """
         pass
-
-#idea board logic will be handled in board object
+#you won you lost?
+#menu/ choose game mode/choose port ip

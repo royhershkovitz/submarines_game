@@ -22,7 +22,7 @@ class BoardIntreface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
-    def check_coords_location(self, x, y)->int:
+    def set_hit_coords_location(self, x, y)->int:
         """
         will get the board contents at x, y
         :param x:
@@ -31,5 +31,26 @@ class BoardIntreface(metaclass=ABCMeta):
                     1 ship
                     2 hit location
                     3 hit location + ship
+                    -1 not valid
+        """
+        pass
+    @abstractmethod
+    def set_ship_coords_location(self, x, y):
+        """
+        will get the board contents at x, y
+        will convert x,y coords from <1,n> to <0, n-1>
+        will not set outside of bounds
+        :param x:
+        :param y:
+        """
+        pass
+    @abstractmethod
+    def place_ship(self, ships)->bool:
+        """
+        :param ships: list of named tuple ship-
+            :param x:
+            :param y:
+            :param size:
+        :return:    true if could fit the ship in this place
         """
         pass

@@ -5,6 +5,7 @@ Creation date: 29.12.2020
 """
 from abc import ABCMeta, abstractmethod
 from game_protocol.network_exception import NetworkError
+import logging
 
 class OctetImplementation(metaclass=ABCMeta):
     """
@@ -26,11 +27,15 @@ class OctetImplementation(metaclass=ABCMeta):
             return start_byte == b'\xff'
         return False
 
-    def send_ships(self):
+    def send_ships(self, ships:list):
         """
         will send a message about the default size and boats
+        :param ships: list of int represents ship sizes
         """
-        self.network_client.send(b'\x05\x02\x03\x03\x04\x05')
+        message = [len(ships)]
+        message.extend(ships)
+        message = bytes(message)
+        self.network_client.send(message)
 
     def get_ships(self):
         """
