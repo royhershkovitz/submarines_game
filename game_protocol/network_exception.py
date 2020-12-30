@@ -8,12 +8,12 @@ class NetworkError(Exception):
     """
     error to create a message
     """
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super().__init__(message)
 
-class EXIT(Exception):
+class EXITError(Exception):
     """
     error to create a exit procedure
     """
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super().__init__(message)

@@ -38,6 +38,12 @@ class UIInterface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
+    def host_not_online(self):
+        """
+        cannot connect to host
+        """
+        pass
+    @abstractmethod
     def update_enemy_board(self, missile_result):
         """
         will update the attack result on board

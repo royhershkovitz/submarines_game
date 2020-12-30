@@ -33,7 +33,7 @@ class TCPImplementation(StreamCommunicateIntreface):
         """
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serversocket.bind((self.host, self.port))
-        self.serversocket.listen(1)        
+        self.serversocket.listen(1)
         (self.clientsocket, address) = self.serversocket.accept()
         self.logger.info(f"A client connected at {address} have connected to the server")
 

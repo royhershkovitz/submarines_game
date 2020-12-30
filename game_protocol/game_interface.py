@@ -41,11 +41,12 @@ class GameIntreface(metaclass=ABCMeta):
         """
         pass
     @abstractmethod
-    def attack(self, x:int, y:int)->bytes:
+    def attack(self, point)->bytes:
         """
         will attack the opponent on the given coords
-        :param x:
-        :param y:
+        :param point:
+            :param x:
+            :param y:
         :return: the other client response
         """
         pass

@@ -40,7 +40,7 @@ class Board(BoardIntreface):
         if missile_result.result != 0:
             self.board[missile_result.x-1][missile_result.y-1] |= SHIP_POS
     #TODO sink
-    def get_hit_result(self, x, y)->int:
+    def get_hit_result(self, point)->int:
         """
         will get the board contents at x, y
         will convert x,y coords from <1,n> to <0, n-1>
@@ -57,6 +57,7 @@ class Board(BoardIntreface):
             return INVALID
         if point.y > self.size_y or point.y < START_BOARD:
             return INVALID
+        x, y = point
         x-=1
         y-=1
         ret_value = self.board[x][y]

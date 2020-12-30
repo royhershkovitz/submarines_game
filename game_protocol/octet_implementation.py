@@ -6,7 +6,7 @@ Creation date: 29.12.2020
 from abc import ABCMeta, abstractmethod
 import collections
 import logging
-from game_protocol.network_exception import NetworkError, EXIT
+from game_protocol.network_exception import NetworkError, EXITError
 #TOP_VALUE < 15 because \xFF is quit signal
 TOP_VALUE = 14
 START = b'\xFF'
@@ -21,6 +21,7 @@ class OctetImplementation(metaclass=ABCMeta):
         self.network_client = network_client
         self.logger = logging.getLogger("OctetImplementation")
         self.make_result = collections.namedtuple("Result", "x y result")
+        self.make_point = collections.namedtuple("Point", "x y")
 
     def start_host(self):
         self.logger.debug(f"start host")
@@ -28,7 +29,12 @@ class OctetImplementation(metaclass=ABCMeta):
     
     def connect(self):
         self.logger.debug(f"start client")
-        self.network_client.connect()
+        try:
+            self.network_client.connect()
+        except (ConnectionResetError, ConnectionRefusedError) as e:
+            self.logger.warn(e)
+            return False
+        return True
 
     def start(self):
         """
@@ -67,25 +73,26 @@ class OctetImplementation(metaclass=ABCMeta):
         self.network_client.send(QUIT)
         self.network_client.close()
 
-    def attack(self, x:int, y:int)->bytes:
+    def attack(self, point)->bytes:
         """
         will attack the opponent on the given coords
-        :param x: number < 16
-        :param y: number < 16
+        :param point:
+            :param x: number < 16
+            :param y: number < 16
         :return: the other client response
         """
+        x, y = point
         if x > TOP_VALUE or x < 0 or y > TOP_VALUE or y < 0:
             raise NetworkError("The protocol does not support x,y coords outside [0,15]")
         attack_value = x
-        y = y<<4
-        attack_value += y
+        attack_value += y<<4
         attack_value = bytes([attack_value])
         self.network_client.send(attack_value)
         result = self.network_client.recv()
         if result and len(result) > 0:
             result = result[0]
             if result==QUIT:
-                raise EXIT("Opponent left")
+                raise EXITError("Opponent left")
         else:
             raise NetworkError("Opponent broke protocol in attack response")
         return self.make_result(x, y, result)
@@ -99,7 +106,7 @@ class OctetImplementation(metaclass=ABCMeta):
             attack_value = recv_bytes[0]
             x = attack_value%16
             y = attack_value>>4
-            return (x,y)
+            return self.make_point(x,y)
         raise NetworkError("Opponent broke protocol in his turn")
 
     def response_to_attacker(self, response):
